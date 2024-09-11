@@ -10,16 +10,16 @@ class BudgetManager:
         if amount > self.available:
             raise ValueError("Insufficient funds")
         self.budgets[name] = amount
+        self.expenditure[name] = []
         self.available -= amount
-        self.expenditure[name] = 0
         return self.available
 
     def spend(self, name, amount):
         if name not in self.expenditure:
             raise ValueError("No such budget")
-        self.expenditure[name] += amount
+        self.expenditure[name].append(amount)
         budgeted = self.budgets[name]
-        spent = self.expenditure[name]
+        spent = sum(self.expenditure[name])
         return budgeted - spent
 
     def print_summary(self):
@@ -30,7 +30,7 @@ class BudgetManager:
         total_remaining = 0
         for name in self.budgets:
             budgeted = self.budgets[name]
-            spent = self.expenditure[name]
+            spent = sum(self.expenditure[name])
             remaining = budgeted - spent
             print(f'{name:15s} {budgeted:10.2f} {spent:10.2f}' f'{remaining:10.2f}')
             total_budgeted += budgeted
